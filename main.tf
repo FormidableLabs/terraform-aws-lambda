@@ -12,7 +12,7 @@ locals {
 
 module "platform" {
   # uses the unversioned platform module
-  source = "git@github.com:FormidableLabs/terraform-aws-platform"
+  source = "git@github.com:FormidableLabs/terraform-aws-platform?ref=v0.1"
 }
 
 resource "aws_cloudwatch_log_group" "this" {
@@ -26,8 +26,9 @@ resource "aws_cloudwatch_log_group" "this" {
 resource "aws_lambda_function" "this" {
   function_name = local.name
 
-  s3_bucket   = var.artifact_bucket
-  s3_key      = var.artifact_key
+  filename    = var.filename
+  s3_bucket   = var.s3_bucket
+  s3_key      = var.s3_key
   role        = aws_iam_role.this.arn
   runtime     = var.runtime
   handler     = var.handler

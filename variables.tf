@@ -1,10 +1,21 @@
-variable "artifact_bucket" {
-  description = "(Required) S3 bucket containing lambda artifacts"
+variable "s3_bucket" {
+  description = <<EOF
+  The S3 bucket location containing the function's deployment package. Conflicts with filename and image_uri. 
+  This bucket must reside in the same AWS region where you are creating the Lambda function.
+  EOF
+  default     = null
   type        = string
 }
 
-variable "artifact_key" {
-  description = "(Required) S3 key of the lambda artifact to deploy."
+variable "s3_key" {
+  description = "The S3 key of an object containing the function's deployment package. Conflicts with filename and image_uri."
+  default     = null
+  type        = string
+}
+
+variable "filename" {
+  description = "The path to the function's deployment package within the local filesystem. If defined, The s3_-prefixed options and image_uri cannot be used."
+  default     = null
   type        = string
 }
 
