@@ -12,7 +12,7 @@ locals {
 
 module "platform" {
   # uses the unversioned platform module
-  source = "git@github.com:FormidableLabs/terraform-aws-platform?ref=v0.1"
+  source = "github.com/FormidableLabs/terraform-aws-platform?ref=v0.1"
 }
 
 resource "aws_cloudwatch_log_group" "this" {
