@@ -1,9 +1,5 @@
 name: Terraform Static Analysis Tests
 description: Runs Terraform Static Analysis Tests - format, validate and plan
-inputs:
-  GITHUB_TOKEN:
-    description: Workflow GitHub Token (limited permissions)
-    required: true
 
 runs:
   using: "composite"
@@ -20,7 +16,6 @@ runs:
     - name: Report Terraform Plan
       uses: actions/github-script@v6
       with:
-        github-token: ${{ inputs.GITHUB_TOKEN }}
         script: |
           let stdout = '';
           let stderr = '';

@@ -1,14 +1,9 @@
 name: Terraform Unit Tests
 description: Runs Terraform Unit Tests Via TerraTest
-inputs:
-  GITHUB_TOKEN:
-    description: Workflow GitHub Token (limited permissions)
-    required: true
 
 runs:
   using: "composite"
   steps:
-
     - name: Setup Go
       uses: actions/setup-go@v3
       with:
@@ -36,7 +31,6 @@ runs:
       if: success() || failure()
       uses: actions/github-script@v6
       with:
-        github-token: ${{ inputs.GITHUB_TOKEN }}
         script: |
           let stdout = '';
           let stderr = '';

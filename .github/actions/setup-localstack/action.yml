@@ -1,9 +1,5 @@
 name: Setup LocalStack
 description: Setups LocalStack to run Terraform Tests against
-inputs:
-  GITHUB_TOKEN:
-    description: Workflow GitHub Token (limited permissions)
-    required: true
 
 runs:
   using: "composite"
