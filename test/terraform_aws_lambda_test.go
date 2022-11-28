@@ -23,6 +23,5 @@ func TestTerraformAWSLambda(t *testing.T) {
 
 	// Run `terraform output` to get the values of output variables and check they have the expected values.
 	lambdaArn := terraform.Output(t, terraformOptions, "arn")
-	assert.Equal(t, "arn:aws:lambda:us-east-1:848569143948:function:use1-development-testLambda2", lambdaArn)
 	assert.Equal(t, "arn:aws:lambda:us-east-1:000000000000:function:use1-development-testLambda", lambdaArn)
 }
