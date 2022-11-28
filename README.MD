@@ -16,7 +16,7 @@ module "lambda" {
 
   filename  = "../../dist/lambda.zip"
   handler   = "build/index.handler"
-  service   = local.service
+  service   = var.service
   stage     = var.stage
   variables = {
     STAGE = var.stage

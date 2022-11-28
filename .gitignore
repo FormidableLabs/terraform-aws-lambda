@@ -1,0 +1,7 @@
+.terraform*
+terraform.tfstate*
+test/testLog.text
+test/testSummary.text
+test/.terraform*
+test/terraform.tfstate*
+test/lambda.zip
