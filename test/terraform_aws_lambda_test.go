@@ -3,6 +3,7 @@ package test
 import (
 	"testing"
 
+	"github.com/gruntwork-io/terratest/modules/aws"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/stretchr/testify/assert"
 )
@@ -24,4 +25,17 @@ func TestTerraformAWSLambda(t *testing.T) {
 	// Run `terraform output` to get the values of output variables and check they have the expected values.
 	lambdaArn := terraform.Output(t, terraformOptions, "arn")
 	assert.Equal(t, "arn:aws:lambda:us-east-1:000000000000:function:use1-development-testLambda", lambdaArn)
+	functionName := terraform.Output(t, terraformOptions, "function_name")
+	awsRegion := "us-east-1"
+
+	testEvent := &HelloWorld{
+		Key: "value1",
+	}
+
+	testResponse := aws.InvokeFunction(t, awsRegion, functionName, testEvent)
+	assert.NotEmpty(t, testResponse)
+}
+
+type HelloWorld struct {
+	Key string `json:"Key"`
 }

@@ -1,7 +1,9 @@
 .terraform*
 terraform.tfstate*
-test/testLog.text
-test/testSummary.text
+test/test_output*
 test/.terraform*
 test/terraform.tfstate*
 test/lambda.zip
+terraform.tfvars
+lambda.zip
+.DS_Store

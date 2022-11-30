@@ -15,17 +15,17 @@ runs:
       if: success() || failure()
       working-directory: test
       run: |
-        go test -timeout 30m 2>&1 | tee testLog.text
+        go test -timeout 30m 2>&1 | tee test_output.log
         result_code=${PIPESTATUS[0]}
-        cat testLog.text
         exit $result_code
 
-    - name: Unit Tests Summary
+    - name: Format Logs
       shell: bash
       if: success() || failure()
       working-directory: test
       run: |
-        cat testLog.text | grep -A 3000 'FAIL\|PASS' > testSummary.text
+        GOBIN=/usr/local/bin/ go install github.com/gruntwork-io/terratest/cmd/terratest_log_parser@latest
+        terratest_log_parser -testlog test_output.log -outputdir test_output
 
     - name: Report Unit Test Summary
       if: success() || failure()
@@ -34,6 +34,7 @@ runs:
         script: |
           let stdout = '';
           let stderr = '';
+          let heading = '';
 
           const options = {};
           options.listeners = {
@@ -44,16 +45,20 @@ runs:
               stderr += data.toString();
             }
           };
-          await exec.exec('cat', ['test/testSummary.text'], options);
+          await exec.exec('cat', ['test/test_output/summary.log'], options);
+          if (stdout.string().includes("PASS")) {
+            heading = "### Unit Test Results - PASSED ✅"
+          } else {
+            heading = "### Unit Test Results - FAILED ❌"
+          }
 
-          const output = `### Unit Tests Results
-          <details><summary>Show Results</summary>
+          const output = `${heading}
 
           \`\`\`\n
           ${stdout}
           \`\`\`
 
-          </details>`;
+          `;
           github.rest.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
