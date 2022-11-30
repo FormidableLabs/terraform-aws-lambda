@@ -46,7 +46,7 @@ runs:
             }
           };
           await exec.exec('cat', ['test/test_output/summary.log'], options);
-          if (stdout.string().includes("PASS")) {
+          if (stdout.includes("PASS")) {
             heading = "### Unit Test Results - PASSED ✅"
           } else {
             heading = "### Unit Test Results - FAILED ❌"
