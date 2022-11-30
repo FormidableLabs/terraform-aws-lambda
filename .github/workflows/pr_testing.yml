@@ -30,6 +30,6 @@ jobs:
         id: setup-localstack
         uses: ./.github/actions/setup-localstack
 
-      - name: Unit Tests
-        id: unit-tests
-        uses: ./.github/actions/unit-tests
+      # - name: Unit Tests
+      #   id: unit-tests
+      #   uses: ./.github/actions/unit-tests
