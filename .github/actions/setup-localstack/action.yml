@@ -37,5 +37,5 @@ runs:
         cp test/lambda.zip .
         echo $PATH
         which awslocal
-        export $PATH=$PATH:~/Library/Python/3.x/bin
+        export $PATH=$PATH:/home/runner/.local/bin/awslocal
         echo $PATH
