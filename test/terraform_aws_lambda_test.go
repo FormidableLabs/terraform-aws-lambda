@@ -1,7 +1,7 @@
 package test
 
 import (
-	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"testing"
@@ -32,15 +32,24 @@ func TestTerraformAWSLambda(t *testing.T) {
 	// Run `terraform output` to get the values of output variables and check they have the expected values.
 	lambdaArn := terraform.Output(t, terraformOptions, "arn")
 	assert.Equal(t, "arn:aws:lambda:us-east-1:000000000000:function:use1-development-testLambda", lambdaArn)
-	functionName := terraform.Output(t, terraformOptions, "function_name")
+	// functionName := terraform.Output(t, terraformOptions, "function_name")
 
-	out, err := exec.Command("awslocal lambda invoke --function-name ", functionName, " response.json").Output()
+	// out, err := exec.Command("awslocal lambda invoke --function-name ", functionName, " response.json").Output()
+	// if err != nil {
+	// 	fmt.Printf("%s", err)
+	// }
+	// fmt.Println("Command Successfully Executed")
+	// output := string(out[:])
+	// fmt.Println(output)
+
+	cmd := exec.Command("awslocal lambda invoke --function-name use1-development-testLambda response.json")
+
+	err := cmd.Run()
+
 	if err != nil {
-		fmt.Printf("%s", err)
+		log.Fatal(err)
 	}
-	fmt.Println("Command Successfully Executed")
-	output := string(out[:])
-	fmt.Println(output)
+
 	// awsRegion := "us-east-1"
 
 	// testEvent := &HelloWorld{
@@ -49,8 +58,4 @@ func TestTerraformAWSLambda(t *testing.T) {
 
 	// testResponse := aws.InvokeFunction(t, awsRegion, functionName, testEvent)
 	// assert.NotEmpty(t, testResponse)
-}
-
-type HelloWorld struct {
-	Key string `json:"Key"`
 }
