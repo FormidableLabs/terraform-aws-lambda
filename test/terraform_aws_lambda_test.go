@@ -1,7 +1,6 @@
 package test
 
 import (
-	"log"
 	"os"
 	"os/exec"
 	"testing"
@@ -14,9 +13,6 @@ import (
 func TestTerraformAWSLambda(t *testing.T) {
 	// Construct the terraform options with default retryable errors to handle the most common
 	// retryable errors in terraform testing.
-	os.Setenv("AWS_REGION", "us-east-1")
-	os.Setenv("AWS_ACCESS_KEY_ID", "test")
-	os.Setenv("AWS_SECRET_ACCESS_KEY", "test")
 
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		// Set the path to the Terraform code that will be tested.
@@ -32,30 +28,22 @@ func TestTerraformAWSLambda(t *testing.T) {
 	// Run `terraform output` to get the values of output variables and check they have the expected values.
 	lambdaArn := terraform.Output(t, terraformOptions, "arn")
 	assert.Equal(t, "arn:aws:lambda:us-east-1:000000000000:function:use1-development-testLambda", lambdaArn)
-	// functionName := terraform.Output(t, terraformOptions, "function_name")
-
-	// out, err := exec.Command("awslocal lambda invoke --function-name ", functionName, " response.json").Output()
-	// if err != nil {
-	// 	fmt.Printf("%s", err)
-	// }
-	// fmt.Println("Command Successfully Executed")
-	// output := string(out[:])
-	// fmt.Println(output)
-
-	cmd := exec.Command("awslocal lambda invoke --function-name use1-development-testLambda response.json")
-
-	err := cmd.Run()
-
+	// Obtain working directory
+	dirPath, err := os.Getwd()
 	if err != nil {
-		log.Fatal(err)
 	}
 
-	// awsRegion := "us-east-1"
+	// Test invoking Lambda function
+	invokeLambdaCmd := "awslocal lambda invoke --function-name use1-development-testLambda response.json"
+	exec.Command("bash", "-c", invokeLambdaCmd).Output()
 
-	// testEvent := &HelloWorld{
-	// 	Key: "value1",
-	// }
+	// if response.json is returned, that means the Lambda Invocation was successful
+	assert.FileExists(t, dirPath+"/response.json")
 
-	// testResponse := aws.InvokeFunction(t, awsRegion, functionName, testEvent)
-	// assert.NotEmpty(t, testResponse)
+	// Confirm CloudWatch Logs group created successfully
+	cloudwatchLogsCmd := "awslocal logs describe-log-groups --log-group-name-prefix /aws/lambda/use1-development-testLambda | jq -r '.logGroups[].logGroupName'"
+	out, err := exec.Command("bash", "-c", cloudwatchLogsCmd).Output()
+
+	assert.Equal(t, "/aws/lambda/use1-development-testLambda\n", string(out))
+
 }

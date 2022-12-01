@@ -4,6 +4,7 @@ test/test_output*
 test/.terraform*
 test/terraform.tfstate*
 test/lambda.zip
+test/response.json
 terraform.tfvars
 lambda.zip
 .DS_Store
