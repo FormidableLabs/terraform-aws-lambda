@@ -33,5 +33,5 @@ runs:
         echo "Startup complete"
         cp test/localstack.tf .
         cp test/terraform.tfvars .
-        cd test && zip -r lambda.zip index.js && cd ..
-        cp test/lambda.zip .
+        cp test/localstack.tf  test/terraform.tfvars ./
+        zip -j lambda.zip test/index.js

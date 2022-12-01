@@ -26,12 +26,11 @@ func TestTerraformAWSLambda(t *testing.T) {
 	terraform.InitAndApply(t, terraformOptions)
 
 	// Run `terraform output` to get the values of output variables and check they have the expected values.
-	lambdaArn := terraform.Output(t, terraformOptions, "arn")
-	assert.Equal(t, "arn:aws:lambda:us-east-1:000000000000:function:use1-development-testLambda", lambdaArn)
+	lambda := terraform.OutputMap(t, terraformOptions, "lambda")
+
+	assert.Equal(t, "arn:aws:lambda:us-east-1:000000000000:function:use1-development-testLambda", lambda["arn"])
 	// Obtain working directory
-	dirPath, err := os.Getwd()
-	if err != nil {
-	}
+	dirPath, _ := os.Getwd()
 
 	// Test invoking Lambda function
 	invokeLambdaCmd := "awslocal lambda invoke --function-name use1-development-testLambda response.json"
@@ -42,7 +41,7 @@ func TestTerraformAWSLambda(t *testing.T) {
 
 	// Confirm CloudWatch Logs group created successfully
 	cloudwatchLogsCmd := "awslocal logs describe-log-groups --log-group-name-prefix /aws/lambda/use1-development-testLambda | jq -r '.logGroups[].logGroupName'"
-	out, err := exec.Command("bash", "-c", cloudwatchLogsCmd).Output()
+	out, _ := exec.Command("bash", "-c", cloudwatchLogsCmd).Output()
 
 	assert.Equal(t, "/aws/lambda/use1-development-testLambda\n", string(out))
 
