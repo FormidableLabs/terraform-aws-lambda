@@ -31,7 +31,5 @@ runs:
         echo "Waiting for LocalStack startup..."  # Wait 30 seconds for the LocalStack container
         localstack wait -t 30                     # to become ready before timing out
         echo "Startup complete"
-        cp test/localstack.tf .
-        cp test/terraform.tfvars .
         cp test/localstack.tf  test/terraform.tfvars ./
         zip -j lambda.zip test/index.js
